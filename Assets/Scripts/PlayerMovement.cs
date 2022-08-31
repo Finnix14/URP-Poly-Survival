@@ -49,7 +49,9 @@ public class PlayerMovement : MonoBehaviour
     Vector3 moveDirection;
     Vector3 slopeMoveDirection;
 
+    public Animator anim;
 
+    
 
     Rigidbody rb;
 
@@ -82,6 +84,8 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
+        
+
         isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
 
         MyInput();
@@ -110,6 +114,8 @@ public class PlayerMovement : MonoBehaviour
         verticalMovement = Input.GetAxisRaw("Vertical");
 
         moveDirection = orientation.forward * verticalMovement + orientation.right * horizontalMovement;
+
+     
     }
 
     void Jump()

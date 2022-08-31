@@ -843,6 +843,7 @@ MonoBehaviour:
     m_Bits: 64
   groundDistance: 0.2
   look: {fileID: 1065828543}
+  anim: {fileID: 1111901704}
 --- !u!114 &1065828545
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -992,6 +993,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1111901702}
   - component: {fileID: 1111901703}
+  - component: {fileID: 1111901704}
   m_Layer: 0
   m_Name: Inventory
   m_TagString: Untagged
@@ -1028,6 +1030,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   smooth: 10
   multiplier: 4
+--- !u!95 &1111901704
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1111901701}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 974b52afccf68db49945aa95293c1e22, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1001 &1206798197
 PrefabInstance:
   m_ObjectHideFlags: 0
