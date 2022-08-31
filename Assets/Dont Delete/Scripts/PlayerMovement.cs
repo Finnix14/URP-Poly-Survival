@@ -1,72 +1,53 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
-using UnityEngine.UI;
 
 public class PlayerMovement : MonoBehaviour
 {
-    float playerHeight = 2f;
-
-    [SerializeField] Transform orientation;
+    [SerializeField] private float playerHeight = 2f;
+    [SerializeField] private Transform orientation;
 
     [Header("Movement")]
     [SerializeField] public float moveSpeed = 6f;
-    [SerializeField] float airMultiplier = 0.2f;
-    float movementMultiplier = 10f;
+    [SerializeField] private float airMultiplier = 0.2f;
+    [SerializeField] private float movementMultiplier = 10f;
 
     [Header("Sprinting")]
-    [SerializeField] float walkSpeed = 4f;
+    [SerializeField] private float walkSpeed = 4f;
     [SerializeField] public float sprintSpeed = 6f;
-    [SerializeField] float acceleration = 10f;
+    [SerializeField] private float acceleration = 10f;
 
     [Header("Jumping")]
-    public float jumpForce = 5f;
-
-
-
+    [SerializeField] private float jumpForce = 5f;
 
     [Header("Keybinds")]
-    [SerializeField] KeyCode jumpKey = KeyCode.Space;
-    [SerializeField] KeyCode sprintKey = KeyCode.LeftShift;
+    [SerializeField] private KeyCode jumpKey = KeyCode.Space;
+    [SerializeField] private KeyCode sprintKey = KeyCode.LeftShift;
 
     [Header("Drag")]
-    [SerializeField] float groundDrag = 7f;
-    [SerializeField] float airDrag = 1f;
-
-    float horizontalMovement;
-    float verticalMovement;
+    [SerializeField] private float groundDrag = 7f;
+    [SerializeField] private float airDrag = 1f;
 
     [Header("Ground Detection")]
-    [SerializeField] Transform groundCheck;
-    [SerializeField] LayerMask groundMask;
-    [SerializeField] float groundDistance = 0.2f;
-
-    public PlayerLook look;
-
+    [SerializeField] private Transform groundCheck;
+    [SerializeField] private LayerMask groundMask;
+    [SerializeField] private float groundDistance = 0.2f;
     public bool isGrounded { get; private set; }
 
-    Vector3 moveDirection;
-    Vector3 slopeMoveDirection;
+    [SerializeField] private InventoryManager inventory;
+    private PlayerLook look;
+    private Vector3 moveDirection;
+    private Vector3 slopeMoveDirection;
+    private Rigidbody rb;
+    private RaycastHit slopeHit;
 
-
-
-    Rigidbody rb;
-
-    RaycastHit slopeHit;
-
+    #region Movement
     private bool OnSlope()
     {
         if (Physics.Raycast(transform.position, Vector3.down, out slopeHit, playerHeight / 2 + 0.5f))
         {
             if (slopeHit.normal != Vector3.up)
-            {
                 return true;
-            }
             else
-            {
                 return false;
-            }
         }
         return false;
     }
@@ -75,9 +56,7 @@ public class PlayerMovement : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         rb.freezeRotation = true;
-        Time.timeScale = 1f;
         look = GetComponent<PlayerLook>();
-  
     }
 
     private void Update()
@@ -89,62 +68,49 @@ public class PlayerMovement : MonoBehaviour
         ControlSpeed();
 
         if (Input.GetKeyDown(jumpKey) && isGrounded)
-        {
-
             Jump();
-        }
 
         slopeMoveDirection = Vector3.ProjectOnPlane(moveDirection, slopeHit.normal);
 
-
-        if (Input.GetKeyDown(KeyCode.Tab) && Time.timeScale == 1)
+        //Player Uses Items.
+        if(Input.GetMouseButtonDown(0))
         {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            if(!(inventory.selectedItem is null))
+                inventory.selectedItem.Use(this);
         }
-
     }
 
-    void MyInput()
+    private void MyInput()
     {
-        horizontalMovement = Input.GetAxisRaw("Horizontal");
-        verticalMovement = Input.GetAxisRaw("Vertical");
+        float horizontalMovement = Input.GetAxisRaw("Horizontal");
+        float verticalMovement = Input.GetAxisRaw("Vertical");
 
         moveDirection = orientation.forward * verticalMovement + orientation.right * horizontalMovement;
     }
 
-    void Jump()
+    private void Jump()
     {
         if (isGrounded && Time.timeScale == 1)
         {
             rb.velocity = new Vector3(rb.velocity.x, 0, rb.velocity.z);
             rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
-
         }
     }
 
-    void ControlSpeed()
+    private void ControlSpeed()
     {
-        if (Input.GetKey(sprintKey) && isGrounded)
-        {
+        if(Input.GetKey(sprintKey) && isGrounded)
             moveSpeed = Mathf.Lerp(moveSpeed, sprintSpeed, acceleration * Time.deltaTime);
-        }
         else
-        {
             moveSpeed = Mathf.Lerp(moveSpeed, walkSpeed, acceleration * Time.deltaTime);
-        }
     }
 
-
-    void ControlDrag()
+    private void ControlDrag()
     {
         if (isGrounded)
-        {
             rb.drag = groundDrag;
-        }
         else
-        {
             rb.drag = airDrag;
-        }
     }
 
     private void FixedUpdate()
@@ -152,26 +118,14 @@ public class PlayerMovement : MonoBehaviour
         MovePlayer(moveDirection);
     }
 
-    public void MovePlayer(Vector3 direction)
+    private void MovePlayer(Vector3 direction)
     {
         if (isGrounded && !OnSlope())
-        {
             rb.AddForce(moveDirection * moveSpeed * movementMultiplier, ForceMode.Acceleration);
-
-        }
         else if (isGrounded && OnSlope())
-        {
             rb.AddForce(slopeMoveDirection.normalized * moveSpeed * movementMultiplier, ForceMode.Acceleration);
-        }
         else if (!isGrounded)
-        {
             rb.AddForce(moveDirection * moveSpeed * movementMultiplier * airMultiplier, ForceMode.Acceleration);
-        }
     }
-
- 
-
-  
-
-
+    #endregion Movement
 }

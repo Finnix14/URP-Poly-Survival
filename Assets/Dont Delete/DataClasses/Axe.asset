@@ -9,10 +9,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 625cd7cfd6711fd4f801f79ac5d45b68, type: 3}
-  m_Name: Test
+  m_Script: {fileID: 11500000, guid: cc827e32308d6d84aa54d8be02cefa61, type: 3}
+  m_Name: Axe
   m_EditorClassIdentifier: 
-  itemName: Test
-  itemIcon: {fileID: 10915, guid: 0000000000000000f000000000000000, type: 0}
+  itemName: New Item Name
+  itemIcon: {fileID: 0}
   isStackable: 1
-  maxStackSize: 10
+  maxStackSize: 99
+  damageDealt: 5
+  toolType: 0
